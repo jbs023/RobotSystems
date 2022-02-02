@@ -35,10 +35,10 @@ def main(config):
     #Set up the buses
     sensor_bus = Bus(name="SensorBus")
     interpretor_bus = Bus(name="InterpretorBus")
-    termination_bus = Bus(name="TerminationBus")
+    termination_bus = Bus(False, name="TerminationBus")
 
     #Spin up consumer, producers and the timer
-    timer = Timer(termination_bus, duration=config.time, name="timer")
+    timer = Timer(termination_bus, duration=float(config.time), name="timer")
     sensor_producer = Producer(
         car.get_adc_value, 
         sensor_bus, 
