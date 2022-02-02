@@ -97,9 +97,10 @@ class ConsumerProducer:
             # Check if the loop should terminate
             # termination_value = self.termination_busses[0].get_message(self.name)
             if self.checkTerminationBusses():
-                logging.debug("{} Terminating".format(self.name))
+                print("{} Terminating".format(self.name))
                 break
 
+            print("{} Running".format(self.name))
             # Collect all of the values from the input busses into a list
             input_values = self.collectBussesToValues(self.input_busses)
 
@@ -274,7 +275,7 @@ class Timer(Producer):
         # Trigger the timer if the duration is non-zero and the time elapsed
         # since instantiation is longer than the duration
         if self.duration and (time.time() > (self.t_start + self.duration)):
-            print(self.name + ": DING!")
+            # print(self.name + ": DING!")
             return True  # Marker that the timer has triggered
         else:
             return False  # Marker that the timer has not yet triggered

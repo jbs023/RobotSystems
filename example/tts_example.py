@@ -1,5 +1,5 @@
 import sys
-sys.path.append(r'/home/bhagatsj/RobotSystems/lib')
+sys.path.append(r'../lib')
 from tts import TTS
 
 

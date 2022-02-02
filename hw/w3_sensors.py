@@ -85,7 +85,9 @@ class Controller():
         self.car.forward(40)
 
     def stop_car(self):
-        self.car.stop()
+        self.car.forward(0)
+        # TODO: This isn't working for some reason?
+        # self.car.stop()
 
     def set_angle(self, rel_dir):
         """Follow the line using grey scale camera"""

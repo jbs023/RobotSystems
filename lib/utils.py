@@ -3,7 +3,15 @@ import time
 import os
 import re
 import math
-from pin import Pin
+
+
+try :
+    from pin import Pin
+except Exception as e :
+    print (" This computer does not appear to be a PiCar - X system \
+        (ezblock is not present) . Shadowing hardware calls with substitute functions ")
+    from sim_ezblock import *
+
 
 mcu_reset = mcu_reset = Pin("MCURST")
 

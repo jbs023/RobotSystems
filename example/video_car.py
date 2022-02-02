@@ -1,6 +1,6 @@
 # coding=utf-8
 import sys
-sys.path.append(r'/home/bhagatsj/RobotSystems/lib')
+sys.path.append(r'../lib')
 
 from utils import reset_mcu
 reset_mcu()
