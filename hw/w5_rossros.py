@@ -46,17 +46,17 @@ def main(config):
         delay=0.01,
         termination_busses=termination_bus,
         name="Interpretor")
-    # controller_consumer = Consumer(
-    #     controller.set_angle, 
-    #     interpretor_bus, 
-    #     delay=0.02,
-    #     termination_busses=termination_bus,
-    #     name="Controller")
+    controller_consumer = Consumer(
+        controller.set_angle, 
+        interpretor_bus, 
+        delay=0.02,
+        termination_busses=termination_bus,
+        name="Controller")
     
     #Follow the line for n seconds
-    # controller.start_car()
-    runConcurrently([timer, sensor_producer, interpret_cp])
-    # controller.stop_car()
+    controller.start_car()
+    runConcurrently([timer, sensor_producer, interpret_cp, controller_consumer])
+    controller.stop_car()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

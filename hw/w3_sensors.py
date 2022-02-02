@@ -40,12 +40,8 @@ class Grayscale_Interpreter():
         :param adc_list: The array of grayscale data from the car
         """
         # Normalize the array to the maximum value obtained
-        print('test')
-        print("Normalized ADC List: {}".format(adc_list))
         gry_list_norm = [float(i)/max(adc_list) for i in adc_list]
         gry_list_diff = max(gry_list_norm)-min(gry_list_norm)
-        print("Normalized ADC List: {}".format(gry_list_norm))
-        print("Diff {}".format(gry_list_diff))
 
         # If the difference is larger than the tolerance, try to detect an edge
         if gry_list_diff > self.sens:
@@ -66,7 +62,6 @@ class Grayscale_Interpreter():
         else:
             rel_dir_pol = 0
 
-        print("Relative Dir: {}".format(rel_dir))
         return rel_dir_pol
 
 
