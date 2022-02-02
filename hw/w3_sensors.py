@@ -65,7 +65,7 @@ class Grayscale_Interpreter():
         else:
             rel_dir_pol = 0
 
-        print("Relative Dir: {}".print(rel_dir))
+        print("Relative Dir: {}".format(rel_dir))
         return rel_dir_pol
 
 
