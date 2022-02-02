@@ -91,7 +91,7 @@ class Controller():
 
     def set_angle(self, rel_dir):
         """Follow the line using grey scale camera"""
-        print("-1 * {} * {}".format(rel_dir, self.scale))
+        # print("-1 * {} * {}".format(rel_dir, self.scale))
         self.car.set_dir_servo_angle(-1*rel_dir*self.scale)
 
     #FIXME: I never got this working properly

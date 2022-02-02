@@ -142,7 +142,7 @@ class Picarx(object):
         adc_value_list.append(self.S1.read())
         adc_value_list.append(self.S2.read())
 
-        logging.debug("ADC List: {}".format(adc_value_list))
+        print("ADC List: {}".format(adc_value_list))
         return adc_value_list
 
     def conncurent_adc_values(self, sensor_bus, delay_time):
