@@ -45,7 +45,10 @@ class Grayscale_Interpreter():
         """
         # Normalize the array to the maximum value obtained
         gry_list_norm = [float(i)/max(adc_list) for i in adc_list]
+
         gry_list_diff = max(gry_list_norm)-min(gry_list_norm)
+        print("Normalized ADC List: {}".format(gry_list_norm))
+        print("Diff {}".format(gry_list_diff))
 
         # If the difference is larger than the tolerance, try to detect an edge
         if gry_list_diff > self.sensitivity:
@@ -66,6 +69,7 @@ class Grayscale_Interpreter():
         else:
             rel_dir_pol = 0
 
+        print("Relative Dir: {}".print(rel_dir))
         return rel_dir_pol
 
 
@@ -86,6 +90,7 @@ class Controller():
 
     def set_angle(self, rel_dir):
         """Follow the line using grey scale camera"""
+        print("-1 * {} * {}".format(rel_dir, self.scale))
         self.car.set_dir_servo_angle(-1*rel_dir*self.scale)
 
     #FIXME: I never got this working properly
