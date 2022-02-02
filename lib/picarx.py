@@ -106,7 +106,7 @@ class Picarx(object):
         # global dir_cal_value
         self.dir_current_angle = value
         angle_value  = value + self.dir_cal_value
-        logging.debug("angle_value: {}".format(angle_value))
+        logging.error("angle_value: {}".format(angle_value))
         # logging.debug("set_dir_servo_angle_1:{}".format(angle_value))
         # logging.debug("set_dir_servo_angle_2:{}".format(dir_cal_value))
         self.dir_servo_pin.angle(angle_value)
