@@ -23,6 +23,9 @@ def main(config):
     interpretor = Grayscale_Interpreter()
     controller = Controller(car)
 
+    #Let everything warm up
+    time.sleep(2)
+
     #Set up the buses
     sensor_bus = Bus(name="SensorBus")
     interpretor_bus = Bus(name="InterpretorBus")
@@ -33,14 +36,14 @@ def main(config):
     sensor_producer = Producer(
         car.get_adc_value, 
         sensor_bus, 
-        delay=0.0,
+        delay=0.01,
         termination_busses=termination_bus,
         name="Sensor")
     interpret_cp = ConsumerProducer(
         interpretor.edge_detect, 
         sensor_bus, 
         interpretor_bus, 
-        delay=0.0,
+        delay=0.01,
         termination_busses=termination_bus,
         name="Interpretor")
     controller_consumer = Consumer(
@@ -49,9 +52,6 @@ def main(config):
         delay=0.02,
         termination_busses=termination_bus,
         name="Controller")
-
-    #Let everything warm up
-    time.sleep(2)
     
     #Follow the line for n seconds
     controller.start_car()
@@ -60,7 +60,7 @@ def main(config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--time', default=2,
+    parser.add_argument('-t', '--time', default=1,
                         help='Duration of running the program')
     parser.add_argument('-d', '--debug', action='store_true',
                         help='Debug flag')
