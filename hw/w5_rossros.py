@@ -8,7 +8,6 @@ import concurrent.futures
 from collections import deque
 from unicodedata import name
 from readerwriterlock import rwlock
-from lib.rossros import Consumer, ConsumerProducer, Producer
 
 sys.path.append(r'/home/bhagatsj/RobotSystems/lib')
 from picarx import Picarx
@@ -16,7 +15,7 @@ from utils import reset_mcu
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 from w3_sensors import *
-from rossross import *
+from rossros import *
 
 reset_mcu()
 
