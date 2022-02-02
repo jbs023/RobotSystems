@@ -71,6 +71,15 @@ class Grayscale_Interpreter():
         logging.debug("Manuever Val: {}".format(maneuver_val))
         return maneuver_val
 
+    def concurrent_get_m_value(self, sensor_bus, interpretor_bus, delay_time):
+        '''Function to support conncurrent sensor interpretation'''
+        while True:
+            adc_list = sensor_bus.read()
+            maneuver_val = self.get_manuever_val(adc_list)
+            interpretor_bus.write(maneuver_val)
+            time.sleep(delay_time)
+
+
 class Controller():
     '''Class that controls the Picarx'''
     def __init__(self, car, camera, scale=1.0):
@@ -91,6 +100,13 @@ class Controller():
         """Follow the line using grey scale camera"""
         angle = self.scale*self.angle*maneuver_val
         self.car.set_dir_servo_angle(angle)
+
+    def concurrent_set_angle(self, interpretor_bus, controller, delay_time):
+        '''Function to support concurrent controller updates'''
+        while True:
+            maneuver_val = interpretor_bus.read()
+            maneuver_val = controller.set_angle(maneuver_val)
+            time.sleep(delay_time)
 
     def follow_line(self, duration, maneuver_val):
         """Follow the line using grey scale camera"""
@@ -149,7 +165,6 @@ class Controller():
             if rel_time >= duration:
                 break
         self.car.stop()
-
 
 
 def main(config):
