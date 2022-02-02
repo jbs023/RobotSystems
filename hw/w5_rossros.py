@@ -38,7 +38,7 @@ def main(config):
     termination_bus = Bus(name="TerminationBus")
 
     #Spin up consumer, producers and the timer
-    timer = Timer(termination_bus, duration=config.time)
+    timer = Timer(termination_bus, duration=config.time, name="timer")
     sensor_producer = Producer(
         car.get_adc_value, 
         sensor_bus, 

@@ -91,7 +91,7 @@ class Controller():
 
     def start_car(self):
         #Calculate turn angle
-        self.car.forward(30)
+        self.car.forward(40)
 
     def stop_car(self):
         self.car.stop()
@@ -165,25 +165,3 @@ class Controller():
             if rel_time >= duration:
                 break
         self.car.stop()
-
-
-def main(config):
-    if config.debug:
-        logging.getLogger().setLevel(logging.DEBUG)
-
-    car = Picarx()
-    sensor = Grayscale_Interpreter(75, 1.0)
-    camera = PiCamera()
-    time.sleep(2) #let the camera warm up
-    controller = Controller(car, scale=0.9)
-
-    controller.follow_line(config.time)
-    # controller.follow_line_cv(config.time)
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--time', default=10,
-                        help='Duration of running the program')
-    parser.add_argument('-d', '--debug', action='store_true',
-                        help='Debug flag')
-    main(parser.parse_args())
