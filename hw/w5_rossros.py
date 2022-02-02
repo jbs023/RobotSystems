@@ -8,7 +8,6 @@ import concurrent.futures
 from collections import deque
 from unicodedata import name
 from readerwriterlock import rwlock
-from lib.rossros import Consumer, ConsumerProducer, Producer
 
 sys.path.append(r'/home/bhagatsj/RobotSystems/lib')
 from picarx import Picarx
@@ -16,7 +15,7 @@ from utils import reset_mcu
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 from w3_sensors import *
-from rossross import *
+from rossros import *
 
 reset_mcu()
 
@@ -38,11 +37,24 @@ def main(config):
     interpretor_bus = Bus(name="InterpretorBus")
     termination_bus = Bus(name="TerminationBus")
 
-    #Spin up consumer and producers
-    timer = Timer(termination_bus, duration=10)
-    sensor_producer = Producer(car.concurrent_adc_value, sensor_bus, delay=0.1)
-    interpret_cp = ConsumerProducer(interpretor.concurrent_get_m_value, sensor_bus, interpretor_bus, delay=0.1)
-    controller_consumer = Consumer(controller.concurrent_set_angle, interpretor_bus, delay=0.1)
+    #Spin up consumer, producers and the timer
+    timer = Timer(termination_bus, duration=config.time)
+    sensor_producer = Producer(
+        car.get_adc_value, 
+        sensor_bus, 
+        delay=0.1
+        termination_bus=termination_bus)
+    interpret_cp = ConsumerProducer(
+        interpretor.get_manuever_val, 
+        sensor_bus, 
+        interpretor_bus, 
+        delay=0.1,
+        termination_bus=termination_bus)
+    controller_consumer = Consumer(
+        controller.set_angle, 
+        interpretor_bus, 
+        delay=0.1,
+        termination_bus=termination_bus)
     
     #Follow the line for n seconds
     controller.start_car()
