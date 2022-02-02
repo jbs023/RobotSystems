@@ -40,6 +40,7 @@ class Grayscale_Interpreter():
         :param adc_list: The array of grayscale data from the car
         """
         # Normalize the array to the maximum value obtained
+        print('test')
         gry_list_norm = [float(i)/max(adc_list) for i in adc_list]
         gry_list_diff = max(gry_list_norm)-min(gry_list_norm)
         print("Normalized ADC List: {}".format(gry_list_norm))
