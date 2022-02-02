@@ -35,21 +35,21 @@ def main(config):
     timer = Timer(termination_bus, duration=float(config.time), termination_busses=termination_bus, name="timer")
     sensor_producer = Producer(
         car.get_adc_value, 
-        sensor_bus, 
+        output_busses=sensor_bus, 
         delay=0.01,
         termination_busses=termination_bus,
         name="Sensor")
     interpret_cp = ConsumerProducer(
         interpretor.edge_detect, 
-        sensor_bus, 
-        interpretor_bus, 
+        input_busses=sensor_bus, 
+        output_busses=interpretor_bus, 
         delay=0.01,
         termination_busses=termination_bus,
         name="Interpretor")
     controller_consumer = Consumer(
         controller.set_angle, 
-        interpretor_bus, 
-        delay=0.02,
+        input_busses=interpretor_bus, 
+        delay=0.01,
         termination_busses=termination_bus,
         name="Controller")
     
