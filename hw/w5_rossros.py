@@ -42,19 +42,19 @@ def main(config):
     sensor_producer = Producer(
         car.get_adc_value, 
         sensor_bus, 
-        delay=0.1
-        termination_bus=termination_bus)
+        delay=0.1,
+        termination_busses=termination_bus)
     interpret_cp = ConsumerProducer(
         interpretor.get_manuever_val, 
         sensor_bus, 
         interpretor_bus, 
         delay=0.1,
-        termination_bus=termination_bus)
+        termination_busses=termination_bus)
     controller_consumer = Consumer(
         controller.set_angle, 
         interpretor_bus, 
         delay=0.1,
-        termination_bus=termination_bus)
+        termination_busses=termination_bus)
     
     #Follow the line for n seconds
     controller.start_car()

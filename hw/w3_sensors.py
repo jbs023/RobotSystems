@@ -175,7 +175,7 @@ def main(config):
     sensor = Grayscale_Interpreter(75, 1.0)
     camera = PiCamera()
     time.sleep(2) #let the camera warm up
-    controller = Controller(car, sensor, camera, scale=0.9)
+    controller = Controller(car, scale=0.9)
 
     controller.follow_line(config.time)
     # controller.follow_line_cv(config.time)
