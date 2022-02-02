@@ -8,7 +8,7 @@ import concurrent.futures
 from collections import deque
 from readerwriterlock import rwlock
 
-sys.path.append(r'/home/bhagatsj/RobotSystems/lib')
+sys.path.append(r'../lib')
 from picarx import Picarx
 from utils import reset_mcu
 from picamera import PiCamera

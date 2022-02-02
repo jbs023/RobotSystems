@@ -1,19 +1,10 @@
 import sys
-from telnetlib import EC
-import time
 import logging
 import argparse
-import concurrent.futures
 
-from collections import deque
-from unicodedata import name
-from readerwriterlock import rwlock
-
-sys.path.append(r'/home/bhagatsj/RobotSystems/lib')
+sys.path.append(r'../lib')
 from picarx import Picarx
 from utils import reset_mcu
-from picamera import PiCamera
-from picamera.array import PiRGBArray
 from w3_sensors import *
 from rossros import *
 
@@ -38,24 +29,24 @@ def main(config):
     termination_bus = Bus(False, name="TerminationBus")
 
     #Spin up consumer, producers and the timer
-    timer = Timer(termination_bus, duration=float(config.time), name="timer")
+    timer = Timer(termination_bus, duration=float(config.time), termination_busses=termination_bus, name="timer")
     sensor_producer = Producer(
         car.get_adc_value, 
         sensor_bus, 
-        delay=0.01,
+        delay=0.0,
         termination_busses=termination_bus,
         name="Sensor")
     interpret_cp = ConsumerProducer(
         interpretor.edge_detect, 
         sensor_bus, 
         interpretor_bus, 
-        delay=0.01,
+        delay=0.0,
         termination_busses=termination_bus,
         name="Interpretor")
     controller_consumer = Consumer(
         controller.set_angle, 
         interpretor_bus, 
-        delay=0.01,
+        delay=0.0,
         termination_busses=termination_bus,
         name="Controller")
     
@@ -66,7 +57,7 @@ def main(config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--time', default=10,
+    parser.add_argument('-t', '--time', default=1,
                         help='Duration of running the program')
     parser.add_argument('-d', '--debug', action='store_true',
                         help='Debug flag')

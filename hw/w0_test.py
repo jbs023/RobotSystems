@@ -7,7 +7,7 @@ import datetime
 import sys
 import time
 
-sys.path.append(r'/home/bhagatsj/RobotSystems/lib')
+sys.path.append(r'../lib')
 from picarx import Picarx
 from utils import reset_mcu
 from picamera import PiCamera
