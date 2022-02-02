@@ -46,7 +46,7 @@ def main(config):
     controller_consumer = Consumer(
         controller.set_angle, 
         interpretor_bus, 
-        delay=0.0,
+        delay=0.02,
         termination_busses=termination_bus,
         name="Controller")
     

@@ -100,7 +100,6 @@ class ConsumerProducer:
                 print("{} Terminating".format(self.name))
                 break
 
-            print("{} Running".format(self.name))
             # Collect all of the values from the input busses into a list
             input_values = self.collectBussesToValues(self.input_busses)
 
