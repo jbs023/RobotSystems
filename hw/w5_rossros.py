@@ -50,7 +50,7 @@ def main(config):
         sensor_bus, 
         interpretor_bus, 
         delay=0.01,
-        termination_busses=termination_bus
+        termination_busses=termination_bus,
         name="Interpretor")
     controller_consumer = Consumer(
         controller.set_angle, 
