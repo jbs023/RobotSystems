@@ -47,21 +47,21 @@ class Grayscale_Interpreter():
         print("Diff {}".format(gry_list_diff))
 
         # If the difference is larger than the tolerance, try to detect an edge
-        if gry_list_diff > self.sensitivity:
+        if gry_list_diff > self.sens:
             rel_dir = gry_list_norm[0]-gry_list_norm[2]
 
             # Calculate the amount of error to make a more continuous relative
             # direction. The deviation of the max or min value from the avg is
             # determined to be the error.
-            if self.polarity == 1:
+            if self.pol == 1:
                 error = (max(gry_list_norm)-np.mean(gry_list_norm))*(2/3)
-            elif self.polarity == -1:
+            elif self.pol == -1:
                 error = (min(gry_list_norm)-np.mean(gry_list_norm))*(2/3)
                 
             # The relative direction is then multiplied by error and polarity
             # to make a distinction between "just off-centered" and "very off-
             # centered"
-            rel_dir_pol = rel_dir*error*self.polarity
+            rel_dir_pol = rel_dir*error*self.pol
         else:
             rel_dir_pol = 0
 
