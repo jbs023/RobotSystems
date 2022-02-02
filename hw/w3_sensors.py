@@ -82,7 +82,7 @@ class Grayscale_Interpreter():
 
 class Controller():
     '''Class that controls the Picarx'''
-    def __init__(self, car, camera, scale=1.0):
+    def __init__(self, car, scale=1.0):
         self.car = car
         self.angle = 5
         self.scale = scale
