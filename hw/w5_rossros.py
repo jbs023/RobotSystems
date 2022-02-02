@@ -45,7 +45,7 @@ def main(config):
         delay=0.1,
         termination_busses=termination_bus)
     interpret_cp = ConsumerProducer(
-        interpretor.get_manuever_val, 
+        interpretor.edge_detect, 
         sensor_bus, 
         interpretor_bus, 
         delay=0.1,

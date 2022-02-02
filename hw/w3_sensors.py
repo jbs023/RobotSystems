@@ -31,60 +31,48 @@ class Grayscale_Interpreter():
         line and negative will look for a lighter line
     """
 
-    def __init__(self, sensitivity, polarity=1):
+    def __init__(self, sensitivity=0, polarity=-1):
         self.sens = sensitivity
         self.pol = polarity
 
         assert((self.pol == 1) or (self.pol == -1))
 
-    def get_line_status(self, adc_list): 
-        #If on the line these should be large, otherwise they'll be small         
-        center_diff1 = adc_list[1]-adc_list[0]
-        center_diff2 = adc_list[1]-adc_list[2]
-        edge_diff = adc_list[0]-adc_list[2]
-        if self.pol <= 0:
-            #If pol < 0, we want to look for a lighter line
-            center_diff1 *= -1
-            center_diff2 *= 2
+    def edge_detect(self, adc_list):
+        """
+        Function to process the grayscale data and detect the relative location
+        of the line to follow
+        :param gry_list: The array of grayscale data from the module
+        """
+        # Normalize the array to the maximum value obtained
+        gry_list_norm = [float(i)/max(adc_list) for i in adc_list]
+        gry_list_diff = max(gry_list_norm)-min(gry_list_norm)
 
-        #Get relative direction of th eline
-        line_direction = "straight"
-        if center_diff1 < self.sens:
-            line_direction = 'left'
-        elif center_diff2 < self.sens:
-            line_direction = 'right'
+        # If the difference is larger than the tolerance, try to detect an edge
+        if gry_list_diff > self.sensitivity:
+            rel_dir = gry_list_norm[0]-gry_list_norm[2]
 
-        logging.debug("Center Diff 1: {}".format(center_diff1))
-        logging.debug("Center Diff 2: {}".format(center_diff2))
-        logging.debug("Line Direction: {}".format(line_direction))
-        return line_direction
+            # Calculate the amount of error to make a more continuous relative
+            # direction. The deviation of the max or min value from the avg is
+            # determined to be the error.
+            if self.polarity == 1:
+                error = (max(gry_list_norm)-np.mean(gry_list_norm))*(2/3)
+            elif self.polarity == -1:
+                error = (min(gry_list_norm)-np.mean(gry_list_norm))*(2/3)
+                
+            # The relative direction is then multiplied by error and polarity
+            # to make a distinction between "just off-centered" and "very off-
+            # centered"
+            rel_dir_pol = rel_dir*error*self.polarity
+        else:
+            rel_dir_pol = 0
 
-    def get_manuever_val(self, adc_list):
-        line_direction = self.get_line_status(adc_list)
-
-        maneuver_val = 0
-        if line_direction == "left":
-            maneuver_val = -1
-        elif line_direction == "right":
-            maneuver_val = 1
-
-        logging.debug("Manuever Val: {}".format(maneuver_val))
-        return maneuver_val
-
-    def concurrent_get_m_value(self, sensor_bus, interpretor_bus, delay_time):
-        '''Function to support conncurrent sensor interpretation'''
-        while True:
-            adc_list = sensor_bus.read()
-            maneuver_val = self.get_manuever_val(adc_list)
-            interpretor_bus.write(maneuver_val)
-            time.sleep(delay_time)
+        return rel_dir_pol
 
 
 class Controller():
     '''Class that controls the Picarx'''
-    def __init__(self, car, scale=1.0):
+    def __init__(self, car, scale=40):
         self.car = car
-        self.angle = 5
         self.scale = scale
 
         self.car.set_camera_servo2_angle(-25)
@@ -96,34 +84,11 @@ class Controller():
     def stop_car(self):
         self.car.stop()
 
-    def set_angle(self, maneuver_val):
+    def set_angle(self, rel_dir):
         """Follow the line using grey scale camera"""
-        angle = self.scale*self.angle*maneuver_val
-        self.car.set_dir_servo_angle(angle)
+        self.car.set_dir_servo_angle(-1*rel_dir*self.scale)
 
-    def concurrent_set_angle(self, interpretor_bus, controller, delay_time):
-        '''Function to support concurrent controller updates'''
-        while True:
-            maneuver_val = interpretor_bus.read()
-            maneuver_val = controller.set_angle(maneuver_val)
-            time.sleep(delay_time)
-
-    def follow_line(self, duration, maneuver_val):
-        """Follow the line using grey scale camera"""
-        start_time = time.time()
-        rel_time = 0
-        prev_angle = 0
- 
-        while rel_time < duration:
-            angle = self.scale*self.angle*maneuver_val
-            if angle != prev_angle:
-                self.car.set_dir_servo_angle(angle)
-            
-            prev_angle = angle
-            time.sleep(0.5)
-            rel_time = time.time() - start_time
-
-    #FIXME: This is definitely still a WIP, it doesn't properly work yet.
+    #FIXME: I never got this working properly
     def follow_line_cv(self, duration):
         """Follow the line using computer vision"""
         camera = PiCamera()
