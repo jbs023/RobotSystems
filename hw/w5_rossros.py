@@ -54,9 +54,12 @@ def main(config):
         name="Controller")
     
     #Follow the line for n seconds
-    controller.start_car()
-    runConcurrently([timer, sensor_producer, interpret_cp, controller_consumer])
-    controller.stop_car()
+    try:
+        controller.start_car()
+        runConcurrently([timer, sensor_producer, interpret_cp, controller_consumer])
+        controller.stop_car()
+    except Exception as e:
+        controller.stop_car()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
