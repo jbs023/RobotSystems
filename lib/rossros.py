@@ -30,6 +30,7 @@ class Bus:
 
         with self.lock.gen_rlock():
             message = self.message
+            print(self.name, message)
 
         return message
 
@@ -43,9 +44,9 @@ class Bus:
 
 
 # Create a set of default input and output busses
-default_termination_bus = Bus(False)
-default_input_bus = Bus()
-default_output_bus = Bus()
+default_termination_bus = Bus(False, name="DefaulTerminationBus")
+default_input_bus = Bus(name="DefaultInputBus")
+default_output_bus = Bus(name="DefaultOutputBus")
 
 
 def ensureTuple(value):
@@ -97,7 +98,6 @@ class ConsumerProducer:
             # Check if the loop should terminate
             # termination_value = self.termination_busses[0].get_message(self.name)
             if self.checkTerminationBusses():
-                print("{} Terminating".format(self.name))
                 break
 
             # Collect all of the values from the input busses into a list
