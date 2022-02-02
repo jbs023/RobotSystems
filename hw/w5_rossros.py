@@ -46,12 +46,12 @@ def main(config):
         delay=0.01,
         termination_busses=termination_bus,
         name="Interpretor")
-    controller_consumer = Consumer(
-        controller.set_angle, 
-        interpretor_bus, 
-        delay=0.02,
-        termination_busses=termination_bus,
-        name="Controller")
+    # controller_consumer = Consumer(
+    #     controller.set_angle, 
+    #     interpretor_bus, 
+    #     delay=0.02,
+    #     termination_busses=termination_bus,
+    #     name="Controller")
     
     #Follow the line for n seconds
     # controller.start_car()

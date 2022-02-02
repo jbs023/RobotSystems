@@ -41,6 +41,7 @@ class Grayscale_Interpreter():
         """
         # Normalize the array to the maximum value obtained
         print('test')
+        print("Normalized ADC List: {}".format(adc_list))
         gry_list_norm = [float(i)/max(adc_list) for i in adc_list]
         gry_list_diff = max(gry_list_norm)-min(gry_list_norm)
         print("Normalized ADC List: {}".format(gry_list_norm))
