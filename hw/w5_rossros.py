@@ -20,8 +20,8 @@ def main(config):
 
     #Instantiate object to talk to different components of the system
     car = Picarx() #the car class already has built in sensing capabilities, so I am reusing it.
-    interpretor = Grayscale_Interpreter(75, 1.0)
-    controller = Controller(car, scale=0.9)
+    interpretor = Grayscale_Interpreter()
+    controller = Controller(car)
 
     #Set up the buses
     sensor_bus = Bus(name="SensorBus")
