@@ -49,6 +49,9 @@ def main(config):
         delay=0.02,
         termination_busses=termination_bus,
         name="Controller")
+
+    #Let everything warm up
+    time.sleep(2)
     
     #Follow the line for n seconds
     controller.start_car()
@@ -57,7 +60,7 @@ def main(config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--time', default=1,
+    parser.add_argument('-t', '--time', default=2,
                         help='Duration of running the program')
     parser.add_argument('-d', '--debug', action='store_true',
                         help='Debug flag')

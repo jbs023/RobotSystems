@@ -142,15 +142,8 @@ class Picarx(object):
         adc_value_list.append(self.S1.read())
         adc_value_list.append(self.S2.read())
 
-        print("ADC List: {}".format(adc_value_list))
+        logging.debug("ADC List: {}".format(adc_value_list))
         return adc_value_list
-
-    def conncurent_adc_values(self, sensor_bus, delay_time):
-        '''Function to support conncurent sensor polling'''
-        while True:
-            adc_list = self.get_adc_value()
-            sensor_bus.write(adc_list)
-            time.sleep(delay_time)
 
     def set_power(self,speed):
         self.set_motor_speed(1, speed)

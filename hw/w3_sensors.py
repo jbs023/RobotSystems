@@ -34,17 +34,13 @@ class Grayscale_Interpreter():
         self.sens = sensitivity
         self.pol = polarity
 
-        assert((self.pol == 1) or (self.pol == -1))
-
     def edge_detect(self, adc_list):
         """
-        Function to process the grayscale data and detect the relative location
-        of the line to follow
-        :param gry_list: The array of grayscale data from the module
+        Function to process the grayscale data
+        :param adc_list: The array of grayscale data from the car
         """
         # Normalize the array to the maximum value obtained
         gry_list_norm = [float(i)/max(adc_list) for i in adc_list]
-
         gry_list_diff = max(gry_list_norm)-min(gry_list_norm)
         print("Normalized ADC List: {}".format(gry_list_norm))
         print("Diff {}".format(gry_list_diff))
