@@ -42,6 +42,8 @@ class Grayscale_Interpreter():
         # Normalize the array to the maximum value obtained
         gry_list_norm = [float(i)/max(adc_list) for i in adc_list]
         gry_list_diff = max(gry_list_norm)-min(gry_list_norm)
+        logging.debug("Norm ADC List: {}".format(gry_list_norm))
+        logging.debug("Grey Diff: {}".format(gry_list_diff))
 
         # If the difference is larger than the tolerance, try to detect an edge
         if gry_list_diff > self.sens:
@@ -62,6 +64,7 @@ class Grayscale_Interpreter():
         else:
             rel_dir_pol = 0
 
+        logging.debug("Rel Dir: {}".format(rel_dir_pol))
         return rel_dir_pol
 
 
