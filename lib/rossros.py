@@ -97,6 +97,7 @@ class ConsumerProducer:
             # Check if the loop should terminate
             # termination_value = self.termination_busses[0].get_message(self.name)
             if self.checkTerminationBusses():
+                logging.debug("{} Terminating".format(self.name))
                 break
 
             # Collect all of the values from the input busses into a list
