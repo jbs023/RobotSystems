@@ -5,7 +5,7 @@ import logging
 from readerwriterlock import rwlock
 from logdecorator import log_on_start, log_on_end, log_on_error
 
-DEBUG = logging.ERROR
+DEBUG = logging.DEBUG
 logging_format = "%(asctime)s: %(message)s"
 logging.basicConfig(format=logging_format, level=logging.INFO,
                     datefmt="%H:%M:%S")
