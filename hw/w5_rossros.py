@@ -92,7 +92,7 @@ def main(config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--time', default=1,
+    parser.add_argument('-t', '--time', default=3,
                         help='Duration of running the program')
     parser.add_argument('-d', '--debug', action='store_true',
                         help='Debug flag')
