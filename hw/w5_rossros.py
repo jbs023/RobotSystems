@@ -5,7 +5,9 @@ import argparse
 sys.path.append(r'../lib')
 from picarx import Picarx
 from utils import reset_mcu
-from w3_sensors import *
+from sensors import GrayscaleSensor, UltraSonicSensor
+from interpretors import Grayscale_Interpreter, UltraSonic_Interpreter
+from controllers import Controller
 from rossros import *
 
 reset_mcu()
@@ -19,36 +21,63 @@ def main(config):
         logging.getLogger().setLevel(logging.DEBUG)
 
     #Instantiate object to talk to different components of the system
-    car = Picarx() #the car class already has built in sensing capabilities, so I am reusing it.
-    interpretor = Grayscale_Interpreter()
-    controller = Controller(car)
+    gs_sensor = GrayscaleSensor()
+    gs_inter = Grayscale_Interpreter()
+    us_sensor = UltraSonicSensor()
+    us_inter = UltraSonic_Interpreter()
+    controller = Controller()
 
     #Let everything warm up
     time.sleep(2)
 
     #Set up the buses
-    sensor_bus = Bus(name="SensorBus")
-    interpretor_bus = Bus(name="InterpretorBus")
+    gs_sens_bus = Bus(name="GSSensor")
+    gs_inter_bus = Bus(name="GSInterpretor")
+    us_sens_bus = Bus(name="USSensor")
+    us_inter_bus = Bus(name="USInterpretor")
     termination_bus = Bus(False, name="TerminationBus")
 
-    #Spin up consumer, producers and the timer
+    #Set up timer
     timer = Timer(termination_bus, duration=float(config.time), termination_busses=termination_bus, name="timer")
-    sensor_producer = Producer(
-        car.get_adc_value, 
-        output_busses=sensor_bus, 
+
+    #Consumer producers for line following
+    gs_sens_prod = Producer(
+        gs_sensor.read, 
+        gs_sens_bus, 
         delay=0.01,
         termination_busses=termination_bus,
         name="Sensor")
-    interpret_cp = ConsumerProducer(
-        interpretor.edge_detect, 
-        input_busses=sensor_bus, 
-        output_busses=interpretor_bus, 
+    gs_inter_cp = ConsumerProducer(
+        gs_inter.get_rel_dir, 
+        gs_sens_bus, 
+        gs_inter_bus, 
         delay=0.01,
         termination_busses=termination_bus,
         name="Interpretor")
-    controller_consumer = Consumer(
+    gs_control_cons = Consumer(
         controller.set_angle, 
-        input_busses=interpretor_bus, 
+        gs_inter_cp, 
+        delay=0.01,
+        termination_busses=termination_bus,
+        name="Controller")
+
+    #Consumer producers for emergency stopping
+    us_sens_prod = Producer(
+        us_sensor.read, 
+        us_sens_bus, 
+        delay=0.01,
+        termination_busses=termination_bus,
+        name="Sensor")
+    us_inter_cp = ConsumerProducer(
+        us_inter.read, 
+        us_sens_bus, 
+        us_inter_bus,
+        delay=0.01,
+        termination_busses=termination_bus,
+        name="Sensor")
+    us_control_cons = Consumer(
+        controller.emergency_stop, 
+        us_inter_bus, 
         delay=0.01,
         termination_busses=termination_bus,
         name="Controller")
@@ -56,7 +85,7 @@ def main(config):
     #Follow the line for n seconds
     try:
         controller.start_car()
-        runConcurrently([timer, sensor_producer, interpret_cp, controller_consumer])
+        runConcurrently([timer, us_sens_prod, us_inter_cp, us_control_cons])
         controller.stop_car()
     except Exception as e:
         controller.stop_car()
