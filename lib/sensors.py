@@ -1,3 +1,4 @@
+from msilib.schema import AdvtExecuteSequence
 import sys
 import time
 import logging
@@ -24,6 +25,8 @@ class GrayscaleSensor():
         adc_value_list.append(self.chn_0.read())
         adc_value_list.append(self.chn_1.read())
         adc_value_list.append(self.chn_2.read())
+
+        logging.debug("ADC Values: {}".format(adc_value_list))
         return adc_value_list
 
 
@@ -59,5 +62,6 @@ class UltraSonicSensor():
         for i in range(times):
             a = self._read()
             if a != -1 or a <= 300:
+                logging.debug("Ultrasonic: {}".format(a))
                 return a
         return -1

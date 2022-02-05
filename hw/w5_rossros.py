@@ -56,7 +56,7 @@ def main(config):
         name="Interpretor")
     gs_control_cons = Consumer(
         controller.set_angle, 
-        gs_inter_cp, 
+        gs_inter_bus, 
         delay=0.01,
         termination_busses=termination_bus,
         name="Controller")
