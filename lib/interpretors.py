@@ -62,7 +62,7 @@ class Grayscale_Interpreter():
         return rel_dir_pol
 
 class UltraSonic_Interpreter():
-    def __init__(self, stopping_distance):
+    def __init__(self, stopping_distance=40):
         self.threshold = stopping_distance
         pass
 
