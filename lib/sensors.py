@@ -1,10 +1,10 @@
-from msilib.schema import AdvtExecuteSequence
 import sys
 import time
 import logging
 
-from adc import ADC
 sys.path.append(r'../lib')
+from adc import ADC
+from pin import Pin
 from utils import reset_mcu
 
 reset_mcu()
@@ -32,9 +32,9 @@ class GrayscaleSensor():
 
 class UltraSonicSensor():
     '''Connector class for the ultra sonic sensor'''
-    def __init__(self, trig, echo, timeout=0.02):
-        self.trig = trig
-        self.echo = echo
+    def __init__(self, timeout=0.02):
+        self.trig = Pin('D8')
+        self.echo = Pin('D9')
         self.timeout = timeout
 
     def _read(self):

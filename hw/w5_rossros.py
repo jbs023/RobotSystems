@@ -7,7 +7,7 @@ from picarx import Picarx
 from utils import reset_mcu
 from sensors import GrayscaleSensor, UltraSonicSensor
 from interpretors import Grayscale_Interpreter, UltraSonic_Interpreter
-from controllers import Controller
+from controller import Controller
 from rossros import *
 
 reset_mcu()
