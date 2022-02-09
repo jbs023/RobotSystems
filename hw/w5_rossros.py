@@ -44,14 +44,14 @@ def main(config):
     gs_sens_prod = Producer(
         gs_sensor.read, 
         gs_sens_bus, 
-        delay=0.01,
+        delay=0.00,
         termination_busses=termination_bus,
         name="Sensor")
     gs_inter_cp = ConsumerProducer(
         gs_inter.get_rel_dir, 
         gs_sens_bus, 
         gs_inter_bus, 
-        delay=0.01,
+        delay=0.00,
         termination_busses=termination_bus,
         name="Interpretor")
     gs_control_cons = Consumer(
@@ -85,8 +85,8 @@ def main(config):
     #Follow the line for n seconds
     try:
         controller.start_car()
-        runConcurrently([timer, gs_sens_prod, gs_inter_cp, gs_control_cons ]) #us_sens_prod, us_inter_cp, us_control_cons])
-                             #   gs_sens_prod, gs_inter_cp, gs_control_cons])
+        runConcurrently([timer, us_sens_prod, us_inter_cp, us_control_cons,
+                                gs_sens_prod, gs_inter_cp, gs_control_cons])
         controller.stop_car()
     except Exception as e:
         controller.stop_car()
