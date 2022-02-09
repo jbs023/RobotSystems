@@ -96,4 +96,11 @@ if __name__ == "__main__":
                         help='Duration of running the program')
     parser.add_argument('-d', '--debug', action='store_true',
                         help='Debug flag')
-    main(parser.parse_args())
+    # main(parser.parse_args())
+
+    us_sensor = UltraSonicSensor()
+    us_inter = UltraSonic_Interpreter()
+
+    while True:
+        value = us_sensor.read()
+        us_inter.interpret(value)
