@@ -41,8 +41,7 @@ class Controller():
 
     def set_angle(self, rel_dir):
         """Follow the line using grey scale camera"""
-        if not self.emergency:
-            self.car.set_dir_servo_angle(-1*rel_dir*self.scale)
+        self.car.set_dir_servo_angle(-1*rel_dir*self.scale)
 
     #FIXME: I never got this working properly
     def follow_line_cv(self, duration):
