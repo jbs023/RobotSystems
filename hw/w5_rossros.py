@@ -85,7 +85,7 @@ def main(config):
     #Follow the line for n seconds
     try:
         controller.start_car()
-        runConcurrently([timer, us_sens_prod, us_inter_cp, us_control_cons])
+        runConcurrently([timer, us_sens_prod, us_inter_cp])
         controller.stop_car()
     except Exception as e:
         controller.stop_car()
