@@ -30,7 +30,6 @@ class Bus:
 
         with self.lock.gen_rlock():
             message = self.message
-            print(self.name, message)
 
         return message
 
