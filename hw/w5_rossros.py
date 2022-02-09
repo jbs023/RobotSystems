@@ -85,7 +85,7 @@ def main(config):
     #Follow the line for n seconds
     try:
         controller.start_car()
-        runConcurrently([timer, us_sens_prod, us_inter_cp])
+        runConcurrently([timer, us_sens_prod, us_inter_cp, us_control_cons])
         controller.stop_car()
     except Exception as e:
         controller.stop_car()
@@ -96,11 +96,4 @@ if __name__ == "__main__":
                         help='Duration of running the program')
     parser.add_argument('-d', '--debug', action='store_true',
                         help='Debug flag')
-    # main(parser.parse_args())
-
-    us_sensor = UltraSonicSensor()
-    us_inter = UltraSonic_Interpreter()
-
-    while True:
-        value = us_sensor.read()
-        us_inter.interpret(value)
+    main(parser.parse_args())
