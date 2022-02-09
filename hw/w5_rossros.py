@@ -69,7 +69,7 @@ def main(config):
         termination_busses=termination_bus,
         name="Sensor")
     us_inter_cp = ConsumerProducer(
-        us_inter.read, 
+        us_inter.interpret, 
         us_sens_bus, 
         us_inter_bus,
         delay=0.01,

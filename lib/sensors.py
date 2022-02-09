@@ -33,8 +33,8 @@ class GrayscaleSensor():
 class UltraSonicSensor():
     '''Connector class for the ultra sonic sensor'''
     def __init__(self, timeout=0.02):
-        self.trig = Pin('D8')
-        self.echo = Pin('D9')
+        self.trig = Pin('D2')
+        self.echo = Pin('D3')
         self.timeout = timeout
 
     def _read(self):

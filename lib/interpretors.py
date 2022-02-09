@@ -62,11 +62,13 @@ class Grayscale_Interpreter():
         return rel_dir_pol
 
 class UltraSonic_Interpreter():
-    def __init__(self, stopping_distance=40):
+    def __init__(self, stopping_distance=10):
+        #Stopping distance in cm
         self.threshold = stopping_distance
         pass
 
     def interpret(self, dist):
+        '''If distance to object is less than threshold, then stop'''
         if dist > 0 and dist < self.threshold:
             return True
         else:
