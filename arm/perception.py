@@ -163,7 +163,7 @@ class Arm():
                             continue
                         Board.setBusServoPulse(1, self.servo1 - 280, 500)  # 爪子张开
                         # 计算夹持器需要旋转的角度
-                        servo2_angle = self.getAngle(self.world_X, self.world_Y, self.rotation_angle)
+                        servo2_angle = getAngle(self.world_X, self.world_Y, self.rotation_angle)
                         Board.setBusServoPulse(2, servo2_angle, 500)
                         time.sleep(0.8)
                         
@@ -191,7 +191,7 @@ class Arm():
                         
                         if not self.__isRunning:
                             continue
-                        servo2_angle = self.getAngle(coordinate[self.detect_color][0], coordinate[self.detect_color][1], -90)
+                        servo2_angle = getAngle(coordinate[self.detect_color][0], coordinate[self.detect_color][1], -90)
                         Board.setBusServoPulse(2, servo2_angle, 500)
                         time.sleep(0.5)
 
