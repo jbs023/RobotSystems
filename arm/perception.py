@@ -7,7 +7,7 @@ import time
 import math
 import threading
 import numpy as np
-from LABConfig import *
+from LABConfig import color_range
 from ArmIK.Transform import *
 from ArmIK.ArmMoveIK import *
 import HiwonderSDK.Board as Board
@@ -16,7 +16,7 @@ from camera import Camera
 
 
 class Arm():
-    def __init__(self):
+    def __init__(self, color):
         self.AK = ArmIK()
         self.range_rgb = {
             'red': (0, 0, 255),
@@ -37,7 +37,7 @@ class Arm():
         self.start_pick_up = False
         self.start_count_t1 = True
 
-        self.__target_color = ('green',)
+        self.__target_color = (color,)
         self.servo1 = 500
         self.rect = None
         self.size = (640, 480)
@@ -127,6 +127,7 @@ class Arm():
     # Primary method 1
     def move(self):
         # 不同颜色木快放置坐标(x, y, z)
+        print("start move thread")
         coordinate = {
             'red':   (-15 + 0.5, 12 - 0.5, 1.5),
             'green': (-15 + 0.5, 6 - 0.5,  1.5),
@@ -248,7 +249,7 @@ class Arm():
         #如果检测到某个区域有识别到的物体，则一直检测该区域直到没有为止
         if self.get_roi and self.start_pick_up:
             self.get_roi = False
-            frame_gb = self.getMaskROI(frame_gb, roi, self.size)    
+            frame_gb = self.getMaskROI(frame_gb, self.roi, self.size)    
         
         frame_lab = cv2.cvtColor(frame_gb, cv2.COLOR_BGR2LAB)  # 将图像转换到LAB空间
         
@@ -257,46 +258,45 @@ class Arm():
         if not self.start_pick_up:
             for i in color_range:
                 if i in self.__target_color:
-                    detect_color = i
-                    frame_mask = cv2.inRange(frame_lab,color_range[detect_color][0], color_range[detect_color][1])  # 对原图像和掩模进行位运算
+                    self.detect_color = i
+                    frame_mask = cv2.inRange(frame_lab, color_range[self.detect_color][0], color_range[self.detect_color][1])  # 对原图像和掩模进行位运算
                     opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # 开运算
                     closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6, 6), np.uint8))  # 闭运算
                     contours = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]  # 找出轮廓
                     areaMaxContour, area_max = self.getAreaMaxContour(contours)  # 找出最大轮廓
             if area_max > 2500:  # 有找到最大面积
-                rect = cv2.minAreaRect(areaMaxContour)
-                box = np.int0(cv2.boxPoints(rect))
+                self.rect = cv2.minAreaRect(areaMaxContour)
+                box = np.int0(cv2.boxPoints(self.rect))
 
-                roi = self.getROI(box) #获取roi区域
+                self.roi = self.getROI(box)
                 self.get_roi = True
 
-                img_centerx, img_centery = self.getCenter(rect, roi, self.size, self.square_length)  # 获取木块中心坐标
-                world_x, world_y = self.convertCoordinate(img_centerx, img_centery, self.size) #转换为现实世界坐标
+                img_centerx, img_centery = self.getCenter(self.rect, self.roi, self.size, self.square_length)  # 获取木块中心坐标
+                self.world_x, self.world_y = self.convertCoordinate(img_centerx, img_centery, self.size) #转换为现实世界坐标
                 
-                cv2.drawContours(img, [box], -1, self.range_rgb[detect_color], 2)
+                cv2.drawContours(img, [box], -1, self.range_rgb[self.detect_color], 2)
                 cv2.putText(img, '(' + str(self.world_x) + ',' + str(self.world_y) + ')', (min(box[0, 0], box[2, 0]), box[2, 1] - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.range_rgb[detect_color], 1) #绘制中心点
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.range_rgb[self.detect_color], 1) #绘制中心点
                 distance = math.sqrt(pow(self.world_x - self.last_x, 2) + pow(self.world_y - self.last_y, 2)) #对比上次坐标来判断是否移动
-                self.last_x, self.last_y = world_x, world_y
+                self.last_x, self.last_y = self.world_x, self.world_y
                 self.track = True
-                #print(count,distance)
-                # 累计判断
+
                 if self.action_finish:
                     if distance < 0.3:
-                        self.center_list.extend((world_x, world_y))
-                        count += 1
-                        if start_count_t1:
-                            start_count_t1 = False
-                            t1 = time.time()
-                        if time.time() - t1 > 1.5:
-                            self.rotation_angle = rect[2]
-                            start_count_t1 = True
-                            self.world_X, self.world_Y = np.mean(np.array(self.center_list).reshape(count, 2), axis=0)
+                        self.center_list.extend((self.world_x, self.world_y))
+                        self.count += 1
+                        if self.start_count_t1:
+                            self.start_count_t1 = False
+                            self.t1 = time.time()
+                        if time.time() - self.t1 > 1.5:
+                            self.rotation_angle = self.rect[2]
+                            self.start_count_t1 = True
+                            self.world_X, self.world_Y = np.mean(np.array(self.center_list).reshape(self.count, 2), axis=0)
                             self.count = 0
                             self.center_list = []
                             self.start_pick_up = True
                     else:
-                        t1 = time.time()
+                        self.t1 = time.time()
                         self.start_count_t1 = True
                         self.count = 0
                         self.center_list = []
@@ -304,9 +304,8 @@ class Arm():
 
 if __name__ == '__main__':
     #Init
-    arm = Arm()
+    arm = Arm('green')
     camera = Camera()
-    __target_color = ('green', )
     arm.start()
     camera.camera_open()
 

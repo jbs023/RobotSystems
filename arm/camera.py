@@ -48,6 +48,7 @@ class Camera:
             print('Failed to close the camera:', e)
 
     def camera_task(self):
+        print("start camera thread")
         while True:
             try:
                 if self.opened and self.cap.isOpened():
