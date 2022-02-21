@@ -255,10 +255,10 @@ class Arm():
         area_max = 0
         areaMaxContour = 0
         if not self.start_pick_up:
-            for i in self.color_range:
+            for i in color_range:
                 if i in __target_color:
                     detect_color = i
-                    frame_mask = cv2.inRange(frame_lab, self.color_range[detect_color][0], self.color_range[detect_color][1])  # 对原图像和掩模进行位运算
+                    frame_mask = cv2.inRange(frame_lab,color_range[detect_color][0], color_range[detect_color][1])  # 对原图像和掩模进行位运算
                     opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # 开运算
                     closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6, 6), np.uint8))  # 闭运算
                     contours = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]  # 找出轮廓
