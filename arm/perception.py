@@ -250,7 +250,7 @@ class Arm():
         #如果检测到某个区域有识别到的物体，则一直检测该区域直到没有为止
         if self.get_roi and self.start_pick_up:
             self.get_roi = False
-            frame_gb = self.getMaskROI(frame_gb, self.roi, self.size)    
+            frame_gb = getMaskROI(frame_gb, self.roi, self.size)    
         
         frame_lab = cv2.cvtColor(frame_gb, cv2.COLOR_BGR2LAB)  # 将图像转换到LAB空间
         
@@ -276,8 +276,8 @@ class Arm():
                 self.roi = getROI(box)
                 self.get_roi = True
 
-                img_centerx, img_centery = self.getCenter(self.rect, self.roi, self.size, self.square_length)  # 获取木块中心坐标
-                self.world_x, self.world_y = self.convertCoordinate(img_centerx, img_centery, self.size) #转换为现实世界坐标
+                img_centerx, img_centery = getCenter(self.rect, self.roi, self.size, square_length)  # 获取木块中心坐标
+                self.world_x, self.world_y = convertCoordinate(img_centerx, img_centery, self.size) #转换为现实世界坐标
                 
                 cv2.drawContours(img, [box], -1, self.range_rgb[self.detect_color], 2)
                 cv2.putText(img, '(' + str(self.world_x) + ',' + str(self.world_y) + ')', (min(box[0, 0], box[2, 0]), box[2, 1] - 10),
