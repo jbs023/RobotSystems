@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 # coding=utf8
+import argparse
 import sys
 sys.path.append('ArmPi/')
 import cv2
 import time
 import math
 import threading
+import logging
 import numpy as np
 from LABConfig import color_range
 from ArmIK.Transform import *
@@ -13,6 +15,9 @@ from ArmIK.ArmMoveIK import *
 import HiwonderSDK.Board as Board
 from CameraCalibration.CalibrationConfig import *
 from camera import Camera
+
+logging_format = "%(asctime)s: %(message)s"
+logging.basicConfig(format=logging_format, level=logging.ERROR , datefmt="%H:%M:%S ")
 
 
 class Arm():
@@ -127,7 +132,7 @@ class Arm():
     # Primary method 1
     def move(self):
         # 不同颜色木快放置坐标(x, y, z)
-        print("start move thread")
+        logging.debug("start move thread")
         coordinate = {
             'red':   (-15 + 0.5, 12 - 0.5, 1.5),
             'green': (-15 + 0.5, 6 - 0.5,  1.5),
@@ -265,10 +270,11 @@ class Arm():
                     contours = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]  # 找出轮廓
                     areaMaxContour, area_max = self.getAreaMaxContour(contours)  # 找出最大轮廓
             if area_max > 2500:  # 有找到最大面积
+                logging.debug("Color found")
                 self.rect = cv2.minAreaRect(areaMaxContour)
                 box = np.int0(cv2.boxPoints(self.rect))
 
-                self.roi = self.getROI(box)
+                self.roi = getROI(box)
                 self.get_roi = True
 
                 img_centerx, img_centery = self.getCenter(self.rect, self.roi, self.size, self.square_length)  # 获取木块中心坐标
@@ -302,9 +308,13 @@ class Arm():
                         self.center_list = []
         return img
 
-if __name__ == '__main__':
-    #Init
-    arm = Arm('green')
+def main(config):
+    #Line following simultaneity
+    if config.debug:
+        logging.getLogger().setLevel(logging.DEBUG)
+
+    #Init arm and camera objects
+    arm = Arm('red')
     camera = Camera()
     arm.start()
     camera.camera_open()
@@ -314,12 +324,12 @@ if __name__ == '__main__':
     # a consumer-producer framework
 
     #Start move thread
-    move_thread = threading.Thread(target=arm.move, daemon=True)
-    move_thread.start()
+    # move_thread = threading.Thread(target=arm.move, daemon=True)
+    # move_thread.start()
 
     #Start camera thread
-    camera_threa = threading.Thread(target=camera.camera_task, args=(), daemon=True)
-    camera_threa.start()
+    # camera_threa = threading.Thread(target=camera.camera_task, args=(), daemon=True)
+    # camera_threa.start()
 
     #Start main thread, which executes the run function
     while True:
@@ -333,3 +343,10 @@ if __name__ == '__main__':
                 break
     camera.camera_close()
     cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--debug', action='store_true',
+                        help='Debug flag')
+    main(parser.parse_args())
+    

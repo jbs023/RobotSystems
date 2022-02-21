@@ -4,9 +4,13 @@ import sys
 sys.path.append('ArmPi/')
 import cv2
 import time
-import threading
+import logging
 import numpy as np
 from CameraCalibration.CalibrationConfig import *
+
+
+logging_format = "%(asctime)s: %(message)s"
+logging.basicConfig(format=logging_format, level=logging.ERROR , datefmt="%H:%M:%S ")
 
 class Camera:
     def __init__(self, resolution=(640, 480)):
@@ -48,7 +52,7 @@ class Camera:
             print('Failed to close the camera:', e)
 
     def camera_task(self):
-        print("start camera thread")
+        logging.debug("start camera thread")
         while True:
             try:
                 if self.opened and self.cap.isOpened():
