@@ -256,7 +256,7 @@ class Arm():
         areaMaxContour = 0
         if not self.start_pick_up:
             for i in color_range:
-                if i in __target_color:
+                if i in self.__target_color:
                     detect_color = i
                     frame_mask = cv2.inRange(frame_lab,color_range[detect_color][0], color_range[detect_color][1])  # 对原图像和掩模进行位运算
                     opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # 开运算
