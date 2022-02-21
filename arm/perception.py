@@ -74,7 +74,6 @@ class Arm():
         self.get_roi = False
         self.center_list = []
         self.first_move = True
-        self.__target_color = ()
         self.detect_color = 'None'
         self.action_finish = True
         self.start_pick_up = False
