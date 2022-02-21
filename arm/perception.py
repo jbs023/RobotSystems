@@ -43,6 +43,7 @@ class Arm():
         self.start_count_t1 = True
 
         self.__target_color = (color,)
+        logging.debug("Set color: {}".format(self.__target_color))
         self.servo1 = 500
         self.rect = None
         self.size = (640, 480)
@@ -86,10 +87,6 @@ class Arm():
     def stop(self):
         self._stop = True
         self.__isRunning = False
-    
-    def setTargetColor(self, target_color):
-        self.__target_color = target_color
-        return (True, ())
 
     def getAreaMaxContour(self, contours):
         contour_area_temp = 0
