@@ -246,8 +246,8 @@ class Arm():
         frame_resize = cv2.resize(img_copy, self.size, interpolation=cv2.INTER_NEAREST)
         frame_gb = cv2.GaussianBlur(frame_resize, (11, 11), 11)
         #如果检测到某个区域有识别到的物体，则一直检测该区域直到没有为止
-        if get_roi and start_pick_up:
-            get_roi = False
+        if self.get_roi and self.start_pick_up:
+            self.get_roi = False
             frame_gb = self.getMaskROI(frame_gb, roi, self.size)    
         
         frame_lab = cv2.cvtColor(frame_gb, cv2.COLOR_BGR2LAB)  # 将图像转换到LAB空间
