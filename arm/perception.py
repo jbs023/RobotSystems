@@ -1,11 +1,10 @@
 #!/usr/bin/python3
 # coding=utf8
 import sys
-sys.path.append('/home/pi/ArmPi/')
+sys.path.append('ArmPi/')
 import cv2
 import time
 import math
-import Camera
 import threading
 import numpy as np
 from LABConfig import *
@@ -13,6 +12,7 @@ from ArmIK.Transform import *
 from ArmIK.ArmMoveIK import *
 import HiwonderSDK.Board as Board
 from CameraCalibration.CalibrationConfig import *
+from camera import Camera
 
 class Arm():
     def __init__(self):
