@@ -112,12 +112,8 @@ def reset():
     start_pick_up = False
     start_count_t1 = True
 
-def init():
-    print("ColorSorting Init")
-    initMove()
 
 def start():
-    global __isRunning
     reset()
     __isRunning = True
     print("ColorSorting Start")
