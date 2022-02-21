@@ -14,6 +14,7 @@ import HiwonderSDK.Board as Board
 from CameraCalibration.CalibrationConfig import *
 from camera import Camera
 
+
 class Arm():
     def __init__(self):
         self.AK = ArmIK()
@@ -48,7 +49,8 @@ class Arm():
         self.world_y = 0
         self.t1 = 0
         self.roi = ()
-        self.last_x, last_y = 0, 0
+        self.last_x = 0
+        self.last_y = 0
 
         #Reset servos
         self.init()
@@ -132,29 +134,29 @@ class Arm():
         }
         while True:
             if self.__isRunning:
-                if first_move and start_pick_up: # 当首次检测到物体时               
-                    action_finish = False
+                if self.first_move and self.start_pick_up:               
+                    self.action_finish = False
                     self.set_rgb(self.detect_color)
                     self.setBuzzer(0.1)               
                     result = self.AK.setPitchRangeMoving((self.world_X, self.world_Y - 2, 5), -90, -90, 0) # 不填运行时间参数，自适应运行时间
                     if result == False:
-                        unreachable = True
+                        self.unreachable = True
                     else:
-                        unreachable = False
+                        self.unreachable = False
                     time.sleep(result[2]/1000) # 返回参数的第三项为时间
-                    start_pick_up = False
-                    first_move = False
-                    action_finish = True
-                elif not first_move and not unreachable: # 不是第一次检测到物体
+                    self.start_pick_up = False
+                    self.first_move = False
+                    self.action_finish = True
+                elif not self.first_move and not self.unreachable: # 不是第一次检测到物体
                     self.set_rgb(self.detect_color)
-                    if track: # 如果是跟踪阶段
+                    if self.track: # 如果是跟踪阶段
                         if not self.__isRunning: # 停止以及退出标志位检测
                             continue
                         self.AK.setPitchRangeMoving((self.world_x, self.world_y - 2, 5), -90, -90, 0, 20)
                         time.sleep(0.02)                    
-                        track = False
-                    if start_pick_up: #如果物体没有移动一段时间，开始夹取
-                        action_finish = False
+                        self.track = False
+                    if self.start_pick_up: #如果物体没有移动一段时间，开始夹取
+                        self.action_finish = False
                         if not self.__isRunning: # 停止以及退出标志位检测
                             continue
                         Board.setBusServoPulse(1, self.servo1 - 280, 500)  # 爪子张开
@@ -203,7 +205,7 @@ class Arm():
                         
                         if not self.__isRunning:
                             continue
-                        Board.setBusServoPulse(1, self.servo1 - 200, 500)  # 爪子张开，放下物体
+                        Board.setBusServoPulse(1, self.servo1 - 200, 500)
                         time.sleep(0.8)
                         
                         if not self.__isRunning:
@@ -223,8 +225,8 @@ class Arm():
                     else:
                         time.sleep(0.01)
             else:
-                if _stop:
-                    _stop = False
+                if self._stop:
+                    self._stop = False
                     Board.setBusServoPulse(1, self.servo1 - 70, 300)
                     time.sleep(0.5)
                     Board.setBusServoPulse(2, 500, 500)
@@ -252,7 +254,7 @@ class Arm():
         
         area_max = 0
         areaMaxContour = 0
-        if not start_pick_up:
+        if not self.start_pick_up:
             for i in self.color_range:
                 if i in __target_color:
                     detect_color = i
@@ -266,38 +268,38 @@ class Arm():
                 box = np.int0(cv2.boxPoints(rect))
 
                 roi = self.getROI(box) #获取roi区域
-                get_roi = True
+                self.get_roi = True
 
                 img_centerx, img_centery = self.getCenter(rect, roi, self.size, self.square_length)  # 获取木块中心坐标
                 world_x, world_y = self.convertCoordinate(img_centerx, img_centery, self.size) #转换为现实世界坐标
                 
                 cv2.drawContours(img, [box], -1, self.range_rgb[detect_color], 2)
-                cv2.putText(img, '(' + str(world_x) + ',' + str(world_y) + ')', (min(box[0, 0], box[2, 0]), box[2, 1] - 10),
+                cv2.putText(img, '(' + str(self.world_x) + ',' + str(self.world_y) + ')', (min(box[0, 0], box[2, 0]), box[2, 1] - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, self.range_rgb[detect_color], 1) #绘制中心点
-                distance = math.sqrt(pow(world_x - last_x, 2) + pow(world_y - last_y, 2)) #对比上次坐标来判断是否移动
-                last_x, last_y = world_x, world_y
-                track = True
+                distance = math.sqrt(pow(self.world_x - self.last_x, 2) + pow(self.world_y - self.last_y, 2)) #对比上次坐标来判断是否移动
+                self.last_x, self.last_y = world_x, world_y
+                self.track = True
                 #print(count,distance)
                 # 累计判断
                 if self.action_finish:
                     if distance < 0.3:
-                        center_list.extend((world_x, world_y))
+                        self.center_list.extend((world_x, world_y))
                         count += 1
                         if start_count_t1:
                             start_count_t1 = False
                             t1 = time.time()
                         if time.time() - t1 > 1.5:
-                            rotation_angle = rect[2]
+                            self.rotation_angle = rect[2]
                             start_count_t1 = True
-                            world_X, world_Y = np.mean(np.array(center_list).reshape(count, 2), axis=0)
-                            count = 0
-                            center_list = []
-                            start_pick_up = True
+                            self.world_X, self.world_Y = np.mean(np.array(self.center_list).reshape(count, 2), axis=0)
+                            self.count = 0
+                            self.center_list = []
+                            self.start_pick_up = True
                     else:
                         t1 = time.time()
-                        start_count_t1 = True
-                        count = 0
-                        center_list = []
+                        self.start_count_t1 = True
+                        self.count = 0
+                        self.center_list = []
         return img
 
 if __name__ == '__main__':
