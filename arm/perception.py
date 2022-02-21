@@ -262,13 +262,16 @@ class Arm():
         areaMaxContour = 0
         if not self.start_pick_up:
             for i in color_range:
+                logging.debug("color: {}, target_color: {}".format(i, self.__target_color))
                 if i in self.__target_color:
+                    logging.debug("Looking for color: {}".format(i))
                     self.detect_color = i
                     frame_mask = cv2.inRange(frame_lab, color_range[self.detect_color][0], color_range[self.detect_color][1])  # 对原图像和掩模进行位运算
                     opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # 开运算
                     closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6, 6), np.uint8))  # 闭运算
                     contours = cv2.findContours(closed, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]  # 找出轮廓
                     areaMaxContour, area_max = self.getAreaMaxContour(contours)  # 找出最大轮廓
+                    logging.debug("Largest contour: {}".format(area_max))
             if area_max > 2500:  # 有找到最大面积
                 logging.debug("Color found")
                 self.rect = cv2.minAreaRect(areaMaxContour)
@@ -324,12 +327,12 @@ def main(config):
     # a consumer-producer framework
 
     #Start move thread
-    # move_thread = threading.Thread(target=arm.move, daemon=True)
-    # move_thread.start()
+    move_thread = threading.Thread(target=arm.move, daemon=True)
+    move_thread.start()
 
     #Start camera thread
-    # camera_threa = threading.Thread(target=camera.camera_task, args=(), daemon=True)
-    # camera_threa.start()
+    camera_threa = threading.Thread(target=camera.camera_task, args=(), daemon=True)
+    camera_threa.start()
 
     #Start main thread, which executes the run function
     while True:
