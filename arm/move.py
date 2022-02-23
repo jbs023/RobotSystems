@@ -237,14 +237,12 @@ class Move():
     def palletize_blocks(self):
         '''Stack blocks?'''
         dz = 2.5
-        z = self.coordinate['red'][2] if self.state.detect_color == 'None' else self.coordinate['red'][self.state.detect_color]
-
         while True:
             if self.state.isRunning:
                 if self.state.detect_color != 'None' and self.state.start_pick_up:  # 如果检测到方块没有移动一段时间后，开始夹取
                     self.set_rgb(self.state.detect_color)
                     self.setBuzzer(0.1)
-                    
+
                     # 高度累加
                     z = self.coordinate['red'][2]
                     z += dz
