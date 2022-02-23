@@ -27,7 +27,7 @@ class SharedState():
         self.get_roi = False
         self.center_list = []
         self.first_move = True
-        self.__isRunning = False
+        self.isRunning = False
         self.detect_color = 'None'
         self.action_finish = True
         self.start_pick_up = False
@@ -75,9 +75,9 @@ class SharedState():
         self.color_list = []
 
         #Set is_Running flag
-        self.__isRunning = True
+        self.isRunning = True
 
     
     def stop(self):
         self._stop = True
-        self.__isRunning = False
+        self.isRunning = False

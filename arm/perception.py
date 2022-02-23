@@ -69,7 +69,6 @@ class Perception():
         img_centerx, img_centery = getCenter(self.state.rect, self.state.roi, self.state.size, square_length)
         self.state.world_x, self.state.world_y = convertCoordinate(img_centerx, img_centery, self.state.size)
         self.state.last_x, self.state.last_y = self.state.world_x, self.state.world_y
-       
 
     def identify_multiple_colors(self, img):    
         img_copy = img.copy()
@@ -77,7 +76,7 @@ class Perception():
         cv2.line(img, (0, int(img_h / 2)), (img_w, int(img_h / 2)), (0, 0, 200), 1)
         cv2.line(img, (int(img_w / 2), 0), (int(img_w / 2), img_h), (0, 0, 200), 1)
 
-        if not self.state.__isRunning:
+        if not self.state.isRunning:
             return img
 
         frame_resize = cv2.resize(img_copy, self.state.size, interpolation=cv2.INTER_NEAREST)
@@ -161,7 +160,7 @@ class Perception():
         cv2.line(img, (0, int(img_h / 2)), (img_w, int(img_h / 2)), (0, 0, 200), 1)
         cv2.line(img, (int(img_w / 2), 0), (int(img_w / 2), img_h), (0, 0, 200), 1)
         
-        if not self.state.__isRunning:
+        if not self.state.isRunning:
             return img
         
         frame_resize = cv2.resize(img_copy, self.state.size, interpolation=cv2.INTER_NEAREST)

@@ -88,7 +88,7 @@ count = 0
 _stop = False
 color_list = []
 get_roi = False
-__isRunning = False
+isRunning = False
 move_square = False
 detect_color = 'None'
 start_pick_up = False
@@ -132,23 +132,23 @@ def init():
     initMove()
 
 def start():
-    global __isRunning
+    global isRunning
     reset()
-    __isRunning = True
+    isRunning = True
     print("ColorPalletizing Start")
 
 def stop():
     global _stop
-    global __isRunning
+    global isRunning
     _stop = True
-    __isRunning = False
+    isRunning = False
     print("ColorPalletizing Stop")
 
 def exit():
     global _stop
-    global __isRunning
+    global isRunning
     _stop = True
-    __isRunning = False
+    isRunning = False
     print("ColorPalletizing Exit")
 
 rect = None
@@ -161,7 +161,7 @@ def move():
     global _stop
     global get_roi
     global move_square
-    global __isRunning
+    global isRunning
     global unreachable
     global detect_color
     global start_pick_up
@@ -172,7 +172,7 @@ def move():
     dz = 2.5
 
     while True:
-        if __isRunning:
+        if isRunning:
             if detect_color != 'None' and start_pick_up:  # 如果检测到方块没有移动一段时间后，开始夹取
                 set_rgb(detect_color)
                 setBuzzer(0.1)
@@ -192,7 +192,7 @@ def move():
                     unreachable = False
                     time.sleep(result[2]/1000)
 
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     # 计算夹持器需要旋转的角度
                     servo2_angle = getAngle(world_X, world_Y, rotation_angle)
@@ -200,49 +200,49 @@ def move():
                     Board.setBusServoPulse(2, servo2_angle, 500)
                     time.sleep(0.5)
 
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     AK.setPitchRangeMoving((world_X, world_Y, 2), -90, -90, 0, 1000)  # 降低高度到2cm
                     time.sleep(1.5)
 
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     Board.setBusServoPulse(1, servo1, 500)  # 夹持器闭合
                     time.sleep(0.8)
 
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     Board.setBusServoPulse(2, 500, 500)
                     AK.setPitchRangeMoving((world_X, world_Y, 12), -90, -90, 0, 1000)  # 机械臂抬起
                     time.sleep(1)
 
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     AK.setPitchRangeMoving((coordinate[detect_color][0], coordinate[detect_color][1], 12), -90, -90, 0, 1500) 
                     time.sleep(1.5)
                     
-                    if not __isRunning:
+                    if not isRunning:
                         continue                  
                     servo2_angle = getAngle(coordinate[detect_color][0], coordinate[detect_color][1], -90)
                     Board.setBusServoPulse(2, servo2_angle, 500)
                     time.sleep(0.5)
 
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     AK.setPitchRangeMoving((coordinate[detect_color][0], coordinate[detect_color][1], z + 3), -90, -90, 0, 500)
                     time.sleep(0.5)
                     
-                    if not __isRunning:
+                    if not isRunning:
                         continue                
                     AK.setPitchRangeMoving((coordinate[detect_color][0], coordinate[detect_color][1], z), -90, -90, 0, 1000)
                     time.sleep(0.8)
 
-                    if not __isRunning:
+                    if not isRunning:
                         continue 
                     Board.setBusServoPulse(1, servo1 - 200, 500)  # 爪子张开  ，放下物体
                     time.sleep(1)
 
-                    if not __isRunning:
+                    if not isRunning:
                         continue 
                     AK.setPitchRangeMoving((coordinate[detect_color][0], coordinate[detect_color][1], 12), -90, -90, 0, 800)
                     time.sleep(0.8)
@@ -282,7 +282,7 @@ def run(img):
     global move_square
     global center_list
     global unreachable
-    global __isRunning
+    global isRunning
     global start_pick_up
     global last_x, last_y
     global rotation_angle
@@ -295,7 +295,7 @@ def run(img):
     cv2.line(img, (0, int(img_h / 2)), (img_w, int(img_h / 2)), (0, 0, 200), 1)
     cv2.line(img, (int(img_w / 2), 0), (int(img_w / 2), img_h), (0, 0, 200), 1)
 
-    if not __isRunning:
+    if not isRunning:
         return img
 
     frame_resize = cv2.resize(img_copy, size, interpolation=cv2.INTER_NEAREST)

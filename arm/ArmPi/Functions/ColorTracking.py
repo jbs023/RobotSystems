@@ -90,7 +90,7 @@ _stop = False
 get_roi = False
 center_list = []
 first_move = True
-__isRunning = False
+isRunning = False
 detect_color = 'None'
 action_finish = True
 start_pick_up = False
@@ -103,7 +103,7 @@ def reset():
     global get_roi
     global first_move
     global center_list
-    global __isRunning
+    global isRunning
     global detect_color
     global action_finish
     global start_pick_up
@@ -129,25 +129,25 @@ def init():
 
 # app开始玩法调用
 def start():
-    global __isRunning
+    global isRunning
     reset()
-    __isRunning = True
+    isRunning = True
     print("ColorTracking Start")
 
 # app停止玩法调用
 def stop():
     global _stop 
-    global __isRunning
+    global isRunning
     _stop = True
-    __isRunning = False
+    isRunning = False
     print("ColorTracking Stop")
 
 # app退出玩法调用
 def exit():
     global _stop
-    global __isRunning
+    global isRunning
     _stop = True
-    __isRunning = False
+    isRunning = False
     print("ColorTracking Exit")
 
 rect = None
@@ -163,7 +163,7 @@ def move():
     global _stop
     global get_roi
     global unreachable
-    global __isRunning
+    global isRunning
     global detect_color
     global action_finish
     global rotation_angle
@@ -179,7 +179,7 @@ def move():
         'blue':  (-15 + 0.5, 0 - 0.5,  1.5),
     }
     while True:
-        if __isRunning:
+        if isRunning:
             if first_move and start_pick_up: # 当首次检测到物体时               
                 action_finish = False
                 set_rgb(detect_color)
@@ -196,14 +196,14 @@ def move():
             elif not first_move and not unreachable: # 不是第一次检测到物体
                 set_rgb(detect_color)
                 if track: # 如果是跟踪阶段
-                    if not __isRunning: # 停止以及退出标志位检测
+                    if not isRunning: # 停止以及退出标志位检测
                         continue
                     AK.setPitchRangeMoving((world_x, world_y - 2, 5), -90, -90, 0, 20)
                     time.sleep(0.02)                    
                     track = False
                 if start_pick_up: #如果物体没有移动一段时间，开始夹取
                     action_finish = False
-                    if not __isRunning: # 停止以及退出标志位检测
+                    if not isRunning: # 停止以及退出标志位检测
                         continue
                     Board.setBusServoPulse(1, servo1 - 280, 500)  # 爪子张开
                     # 计算夹持器需要旋转的角度
@@ -211,50 +211,50 @@ def move():
                     Board.setBusServoPulse(2, servo2_angle, 500)
                     time.sleep(0.8)
                     
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     AK.setPitchRangeMoving((world_X, world_Y, 2), -90, -90, 0, 1000)  # 降低高度
                     time.sleep(2)
                     
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     Board.setBusServoPulse(1, servo1, 500)  # 夹持器闭合
                     time.sleep(1)
                     
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     Board.setBusServoPulse(2, 500, 500)
                     AK.setPitchRangeMoving((world_X, world_Y, 12), -90, -90, 0, 1000)  # 机械臂抬起
                     time.sleep(1)
                     
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     # 对不同颜色方块进行分类放置
                     result = AK.setPitchRangeMoving((coordinate[detect_color][0], coordinate[detect_color][1], 12), -90, -90, 0)   
                     time.sleep(result[2]/1000)
                     
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     servo2_angle = getAngle(coordinate[detect_color][0], coordinate[detect_color][1], -90)
                     Board.setBusServoPulse(2, servo2_angle, 500)
                     time.sleep(0.5)
 
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     AK.setPitchRangeMoving((coordinate[detect_color][0], coordinate[detect_color][1], coordinate[detect_color][2] + 3), -90, -90, 0, 500)
                     time.sleep(0.5)
                     
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     AK.setPitchRangeMoving((coordinate[detect_color]), -90, -90, 0, 1000)
                     time.sleep(0.8)
                     
-                    if not __isRunning:
+                    if not isRunning:
                         continue
                     Board.setBusServoPulse(1, servo1 - 200, 500)  # 爪子张开，放下物体
                     time.sleep(0.8)
                     
-                    if not __isRunning:
+                    if not isRunning:
                         continue                    
                     AK.setPitchRangeMoving((coordinate[detect_color][0], coordinate[detect_color][1], 12), -90, -90, 0, 800)
                     time.sleep(0.8)
@@ -295,7 +295,7 @@ def run(img):
     global track
     global get_roi
     global center_list
-    global __isRunning
+    global isRunning
     global unreachable
     global detect_color
     global action_finish
@@ -311,7 +311,7 @@ def run(img):
     cv2.line(img, (0, int(img_h / 2)), (img_w, int(img_h / 2)), (0, 0, 200), 1)
     cv2.line(img, (int(img_w / 2), 0), (int(img_w / 2), img_h), (0, 0, 200), 1)
     
-    if not __isRunning:
+    if not isRunning:
         return img
      
     frame_resize = cv2.resize(img_copy, size, interpolation=cv2.INTER_NEAREST)
