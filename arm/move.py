@@ -14,11 +14,6 @@ from CameraCalibration.CalibrationConfig import *
 class Move():
     def __init__(self, shared_state):
         self.state = shared_state
-        self.coordinate = {
-            'red':   (-15 + 0.5, 12 - 0.5, 1.5),
-            'green': (-15 + 0.5, 6 - 0.5,  1.5),
-            'blue':  (-15 + 0.5, 0 - 0.5,  1.5),
-        } 
 
     def setBuzzer(self,timer):
         Board.setBuzzer(0)
@@ -44,8 +39,15 @@ class Move():
             Board.RGB.setPixelColor(1, Board.PixelColor(0, 0, 0))
             Board.RGB.show()
 
+    #TODO: Investigate the difference between this and 'sort_blocks'
     def move_block(self):
         '''Move one block'''
+        coordinate = {
+            'red':   (-15 + 0.5, 12 - 0.5, 1.5),
+            'green': (-15 + 0.5, 6 - 0.5,  1.5),
+            'blue':  (-15 + 0.5, 0 - 0.5,  1.5),
+        } 
+
         while True:
             if self.state.isRunning:
                 if self.state.first_move and self.state.start_pick_up:               
@@ -98,23 +100,23 @@ class Move():
                         if not self.state.isRunning:
                             continue
                         # 对不同颜色方块进行分类放置
-                        result = self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], 12), -90, -90, 0)   
+                        result = self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], 12), -90, -90, 0)   
                         time.sleep(result[2]/1000)
                         
                         if not self.state.isRunning:
                             continue
-                        servo2_angle = getAngle(self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], -90)
+                        servo2_angle = getAngle(coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], -90)
                         Board.setBusServoPulse(2, servo2_angle, 500)
                         time.sleep(0.5)
 
                         if not self.state.isRunning:
                             continue
-                        self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], self.coordinate[self.state.detect_color][2] + 3), -90, -90, 0, 500)
+                        self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], coordinate[self.state.detect_color][2] + 3), -90, -90, 0, 500)
                         time.sleep(0.5)
                         
                         if not self.state.isRunning:
                             continue
-                        self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color]), -90, -90, 0, 1000)
+                        self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color]), -90, -90, 0, 1000)
                         time.sleep(0.8)
                         
                         if not self.state.isRunning:
@@ -124,7 +126,7 @@ class Move():
                         
                         if not self.state.isRunning:
                             continue                    
-                        self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], 12), -90, -90, 0, 800)
+                        self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], 12), -90, -90, 0, 800)
                         time.sleep(0.8)
 
                         self.state.init()  #reset servos
@@ -150,7 +152,13 @@ class Move():
 
 
     def sort_blocks(self):
-        '''Move blocks one at a time'''
+        '''Sort blocks into their spot'''
+        coordinate = {
+            'red':   (-15 + 0.5, 12 - 0.5, 1.5),
+            'green': (-15 + 0.5, 6 - 0.5,  1.5),
+            'blue':  (-15 + 0.5, 0 - 0.5,  1.5),
+        } 
+        
         while True:
             if self.state.isRunning:        
                 if self.state.detect_color != 'None' and self.state.start_pick_up:
@@ -188,23 +196,23 @@ class Move():
 
                         if not self.state.isRunning:
                             continue
-                        result = self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], 12), -90, -90, 0)   
+                        result = self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], 12), -90, -90, 0)   
                         time.sleep(result[2]/1000)
                         
                         if not self.state.isRunning:
                             continue                   
-                        servo2_angle = getAngle(self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], -90)
+                        servo2_angle = getAngle(coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], -90)
                         Board.setBusServoPulse(2, servo2_angle, 500)
                         time.sleep(0.5)
 
                         if not self.state.isRunning:
                             continue
-                        self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], self.coordinate[self.state.detect_color][2] + 3), -90, -90, 0, 500)
+                        self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], coordinate[self.state.detect_color][2] + 3), -90, -90, 0, 500)
                         time.sleep(0.5)
                         
                         if not self.state.isRunning:
                             continue                    
-                        self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color]), -90, -90, 0, 1000)
+                        self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color]), -90, -90, 0, 1000)
                         time.sleep(0.8)
 
                         if not self.state.isRunning:
@@ -214,7 +222,7 @@ class Move():
 
                         if not self.state.isRunning:
                             continue
-                        self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], 12), -90, -90, 0, 800)
+                        self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], 12), -90, -90, 0, 800)
                         time.sleep(0.8)
 
                         self.state.init()  # 回到初始位置
@@ -234,21 +242,27 @@ class Move():
                     time.sleep(1.5)
                 time.sleep(0.01)
             
-    def palletize_blocks(self):
-        '''Stack blocks?'''
+    def stack_blocks(self):
+        '''Stack blocks'''
+        coordinate = {
+            'red':   (-15 + 1, -7 - 0.5, 1.5),
+            'green': (-15 + 1, -7 - 0.5, 1.5),
+            'blue':  (-15 + 1, -7 - 0.5, 1.5),
+        }
         dz = 2.5
+        z_r =  coordinate['red'][2]
+
         while True:
             if self.state.isRunning:
                 if self.state.detect_color != 'None' and self.state.start_pick_up:  # 如果检测到方块没有移动一段时间后，开始夹取
                     self.set_rgb(self.state.detect_color)
                     self.setBuzzer(0.1)
-
                     # 高度累加
-                    z = self.coordinate['red'][2]
-                    z += dz
-                    if z == 2 * dz + self.coordinate['red'][2]:
-                        z = self.coordinate['red'][2]
-                    if z == self.coordinate['red'][2]:  
+                    z = z_r
+                    z_r += dz
+                    if z == 2 * dz + coordinate['red'][2]:
+                        z_r = coordinate['red'][2]
+                    if z == coordinate['red'][2]:  
                         self.state.move_square = True
                         time.sleep(3)
                         self.state.move_square = False
@@ -286,23 +300,23 @@ class Move():
 
                         if not self.state.isRunning:
                             continue
-                        self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], 12), -90, -90, 0, 1500) 
+                        self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], 12), -90, -90, 0, 1500) 
                         time.sleep(1.5)
                         
                         if not self.state.isRunning:
                             continue                  
-                        servo2_angle = getAngle(self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], -90)
+                        servo2_angle = getAngle(coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], -90)
                         Board.setBusServoPulse(2, servo2_angle, 500)
                         time.sleep(0.5)
 
                         if not self.state.isRunning:
                             continue
-                        self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], z + 3), -90, -90, 0, 500)
+                        self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], z + 3), -90, -90, 0, 500)
                         time.sleep(0.5)
                         
                         if not self.state.isRunning:
                             continue                
-                        self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], z), -90, -90, 0, 1000)
+                        self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], z), -90, -90, 0, 1000)
                         time.sleep(0.8)
 
                         if not self.state.isRunning:
@@ -312,7 +326,7 @@ class Move():
 
                         if not self.state.isRunning:
                             continue 
-                        self.state.AK.setPitchRangeMoving((self.coordinate[self.state.detect_color][0], self.coordinate[self.state.detect_color][1], 12), -90, -90, 0, 800)
+                        self.state.AK.setPitchRangeMoving((coordinate[self.state.detect_color][0], coordinate[self.state.detect_color][1], 12), -90, -90, 0, 800)
                         time.sleep(0.8)
 
                         self.state.init()  # 回到初始位置

@@ -154,6 +154,7 @@ def move():
         'green': (-15 + 0.5, 6 - 0.5,  1.5),
         'blue':  (-15 + 0.5, 0 - 0.5,  1.5),
     }
+    
     while True:
         if isRunning:        
             if detect_color != 'None' and start_pick_up:  #如果检测到方块没有移动一段时间后，开始夹取
@@ -370,7 +371,9 @@ def run(img):
 if __name__ == '__main__':
     init()
     start()
-    target_color = ('red', 'green', 'blue')
+    target_color = 
+    
+
     my_camera = Camera.Camera()
     my_camera.camera_open()
     while True:
