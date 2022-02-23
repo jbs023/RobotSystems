@@ -3,10 +3,10 @@ import logging
 import argparse
 import threading
 
-from arm.move import Move
-from arm.camera import Camera
-from arm.perception import Perception
-from arm.shared_state import SharedState
+from move import Move
+from camera import Camera
+from perception import Perception
+from shared_state import SharedState
 
 def main(config):
     #Line following simultaneity
