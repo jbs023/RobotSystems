@@ -11,12 +11,7 @@ import numpy as np
 from LABConfig import color_range
 from ArmIK.Transform import *
 from ArmIK.ArmMoveIK import *
-import HiwonderSDK.Board as Board
 from CameraCalibration.CalibrationConfig import *
-from camera import Camera
-
-from arm.move import Move
-from arm.shared_state import SharedState
 
 logging_format = "%(asctime)s: %(message)s"
 logging.basicConfig(format=logging_format, level=logging.ERROR , datefmt="%H:%M:%S ")
