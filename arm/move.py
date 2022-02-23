@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 # coding=utf8
-import argparse
+import time
 import sys
 sys.path.append('ArmPi/')
-import time
+
+
 from ArmIK.Transform import *
 from ArmIK.ArmMoveIK import *
 import HiwonderSDK.Board as Board

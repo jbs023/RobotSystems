@@ -1,24 +1,13 @@
 #!/usr/bin/python3
 # coding=utf8
-import argparse
 import sys
 sys.path.append('ArmPi/')
 
-import cv2
-import time
-import math
-import threading
 import logging
-import numpy as np
-from LABConfig import color_range
 from ArmIK.Transform import *
 from ArmIK.ArmMoveIK import *
 import HiwonderSDK.Board as Board
 from CameraCalibration.CalibrationConfig import *
-from camera import Camera
-
-from arm.move import Move
-from arm.shared_state import SharedState
 
 
 class SharedState():
