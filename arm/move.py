@@ -14,7 +14,7 @@ from CameraCalibration.CalibrationConfig import *
 class Move():
     def __init__(self, shared_state):
         self.state = shared_state
-        self.self.coordinate = {
+        self.coordinate = {
             'red':   (-15 + 0.5, 12 - 0.5, 1.5),
             'green': (-15 + 0.5, 6 - 0.5,  1.5),
             'blue':  (-15 + 0.5, 0 - 0.5,  1.5),
