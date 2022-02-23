@@ -14,7 +14,8 @@ def main(config):
         logging.getLogger().setLevel(logging.DEBUG)
 
     #Init arm and camera objects
-    shared_state = SharedState('red')
+    target_colors = ('red', 'green', 'blue')
+    shared_state = SharedState(target_colors, config.function)
     shared_state.start()
 
     perception = Perception(shared_state)

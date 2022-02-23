@@ -235,7 +235,7 @@ class Move():
                 time.sleep(0.01)
             
     def palletize_blocks(self):
-        '''Stack blocks'''
+        '''Stack blocks?'''
         dz = 2.5
         z = self.coordinate['red'][2] if self.state.detect_color == 'None' else self.coordinate['red'][self.state.detect_color]
 
@@ -244,15 +244,17 @@ class Move():
                 if self.state.detect_color != 'None' and self.state.start_pick_up:  # 如果检测到方块没有移动一段时间后，开始夹取
                     self.set_rgb(self.state.detect_color)
                     self.setBuzzer(0.1)
+                    
                     # 高度累加
-                    z = z_r
-                    z_r += dz
+                    z = self.coordinate['red'][2]
+                    z += dz
                     if z == 2 * dz + self.coordinate['red'][2]:
-                        z_r = self.coordinate['red'][2]
+                        z = self.coordinate['red'][2]
                     if z == self.coordinate['red'][2]:  
-                        move_square = True
+                        self.state.move_square = True
                         time.sleep(3)
-                        move_square = False
+                        self.state.move_square = False
+
                     result = self.state.AK.setPitchRangeMoving((self.state.world_X, self.state.world_Y, 7), -90, -90, 0)  # 移到目标位置，高度5cm
                     if result == False:
                         self.state.unreachable = True

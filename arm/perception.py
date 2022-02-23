@@ -86,7 +86,6 @@ class Perception():
             frame_gb = getMaskROI(frame_gb, self.state.roi, self.state.size)    
         
         frame_lab = cv2.cvtColor(frame_gb, cv2.COLOR_BGR2LAB)  # 将图像转换到LAB空间
-        color_area_max = None
         max_area = 0
         areaMaxContour_max = 0
         
@@ -97,7 +96,6 @@ class Perception():
                     if areaMaxContour is not None:
                         if area_max > max_area:  # 找最大面积
                             max_area = area_max
-                            color_area_max = i
                             self.state.detect_color = i
                             areaMaxContour_max = areaMaxContour
             if max_area > 2500:  # 有找到最大面积
@@ -112,11 +110,11 @@ class Perception():
                     img, distance = self.draw_box(box, img)
 
                 if not self.state.start_pick_up:
-                    if color_area_max == 'red':  # 红色最大
+                    if self.state.detect_color == 'red':  # 红色最大
                         color = 1
-                    elif color_area_max == 'green':  # 绿色最大
+                    elif self.state.detect_color == 'green':  # 绿色最大
                         color = 2
-                    elif color_area_max == 'blue':  # 蓝色最大
+                    elif self.state.detect_color == 'blue':  # 蓝色最大
                         color = 3
                     else:
                         color = 0
