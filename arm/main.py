@@ -32,7 +32,7 @@ def main(config):
         move_func = move.sort_blocks
     elif config.function == "3":
         move_func = move.palletize_blocks
-    else:
+    elif config.function != "1":
         print("Invalid Function Choice!")
         exit()
 
@@ -65,5 +65,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', action='store_true',
                         help='Debug flag')
-    parser.add_argument('-f', '--function', default='1',  help='1. Move block \n2. Sort Blocks \n3. Palletize Blocks')
+    parser.add_argument('-f', '--function', default=1,  help='1. Move block \n2. Sort Blocks \n3. Palletize Blocks')
     main(parser.parse_args())
