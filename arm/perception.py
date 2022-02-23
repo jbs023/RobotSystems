@@ -150,7 +150,8 @@ class Perception():
         if self.state.move_square:
             cv2.putText(img, "Make sure no blocks in the stacking area", (15, int(img.shape[0]/2)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)    
         
-        cv2.putText(img, "Color: " + self.state.detect_color, (10, img.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.65, self.state.range_rgb[self.state.detect_color], 2)
+        if self.state.detect_color != "None":
+            cv2.putText(img, "Color: " + self.state.detect_color, (10, img.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.65, self.state.range_rgb[self.state.detect_color], 2)
         
         return img
         
