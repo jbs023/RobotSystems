@@ -18,7 +18,7 @@ def main(config):
     shared_state = SharedState(target_colors, config.function)
     shared_state.start()
 
-    perception = Perception(shared_state)
+    perception = Perception(shared_state, config.function)
     move = Move(shared_state)
     camera = Camera()
     camera.camera_open()
