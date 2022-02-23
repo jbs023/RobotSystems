@@ -18,8 +18,16 @@ logging.basicConfig(format=logging_format, level=logging.ERROR , datefmt="%H:%M:
 
 
 class Perception():
-    def __init__(self, shared_state):
+    def __init__(self, shared_state, function_flag):
         self.state = shared_state
+        self.duration = 0
+        if function_flag == "1":
+            self.duration = 1.5
+        elif function_flag == "2":
+            self.duration = 1
+        elif function_flag == "3":
+            self.duration = 0.5
+        
 
     def getAreaMaxContour(self, contours):
         contour_area_temp = 0
@@ -57,7 +65,7 @@ class Perception():
         if self.state.start_count_t1:
             self.state.start_count_t1 = False
             self.state.t1 = time.time()
-        if time.time() - self.state.t1 > 1.5:
+        if time.time() - self.state.t1 > self.duration:
             self.state.rotation_angle = self.state.rect[2]
             self.state.start_count_t1 = True
             self.state.world_X, self.state.world_Y = np.mean(np.array(self.state.center_list).reshape(self.state.count, 2), axis=0)
