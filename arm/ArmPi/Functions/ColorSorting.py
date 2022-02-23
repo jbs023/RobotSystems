@@ -26,13 +26,13 @@ range_rgb = {
     'white': (255, 255, 255),
 }
 
-__target_color = ('red')
+target_color = ('red')
 # 设置检测颜色
 def setTargetColor(target_color):
-    global __target_color
+    global target_color
 
     print("COLOR", target_color)
-    __target_color = target_color
+    target_color = target_color
     return (True, ())
 
 #找出面积最大的轮廓
@@ -100,14 +100,14 @@ def reset():
     global color_list
     global detect_color
     global start_pick_up
-    global __target_color
+    global target_color
     global start_count_t1
 
     count = 0
     _stop = False
     color_list = []
     get_roi = False
-    __target_color = ()
+    target_color = ()
     detect_color = 'None'
     start_pick_up = False
     start_count_t1 = True
@@ -286,7 +286,7 @@ def run(img):
     
     if not start_pick_up:
         for i in color_range:
-            if i in __target_color:
+            if i in target_color:
                 frame_mask = cv2.inRange(frame_lab, color_range[i][0], color_range[i][1])  #对原图像和掩模进行位运算
                 opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6,6),np.uint8))  #开运算
                 closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6,6),np.uint8)) #闭运算
@@ -370,7 +370,7 @@ def run(img):
 if __name__ == '__main__':
     init()
     start()
-    __target_color = ('red', 'green', 'blue')
+    target_color = ('red', 'green', 'blue')
     my_camera = Camera.Camera()
     my_camera.camera_open()
     while True:

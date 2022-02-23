@@ -41,12 +41,12 @@ range_rgb = {
     'white': (255, 255, 255),
 }
 
-__target_color = ('red',)
+target_color = ('red',)
 def setTargetdetected_color(target_color):
-    global __target_color
+    global target_color
 
     print("tartget_color", target_color)
-    __target_color = target_color
+    target_color = target_color
     return (True, ())
 
 #找出面积最大的轮廓
@@ -112,7 +112,7 @@ def reset():
     global start_count_t1
     global start_count_t2
     global start_count_t3
-    global __target_color, detect_color
+    global target_color, detect_color
 
     count = 0  
     _stop = False
@@ -124,7 +124,7 @@ def reset():
     start_count_t1 = True
     start_count_t2 = True
     start_count_t3 = True
-    __target_color = ()
+    target_color = ()
     
 def init():
     print("ASRControl Init")
@@ -294,7 +294,7 @@ def run(img):
     global rotation_angle
     global last_x, last_y
     global world_X, world_Y 
-    global __target_color, detect_color  
+    global target_color, detect_color  
     global start_count_t1, start_count_t2, start_count_t3
 
     img_copy = img.copy()
@@ -317,22 +317,22 @@ def run(img):
     if data == 2:
         my_tts.TTSModuleSpeak("[h0][v10][m53]", "好的")
         start_count_t2 = True
-        __target_color = ('red',)
+        target_color = ('red',)
     elif data == 3:
         my_tts.TTSModuleSpeak("[h0][v10][m53]", "ok")
-        __target_color = ('green',)
+        target_color = ('green',)
         start_count_t2 = True
     elif data == 4:
         my_tts.TTSModuleSpeak("[h0][v10][m53]", "收到")
-        __target_color = ('blue',)
+        target_color = ('blue',)
         start_count_t2 = True
     elif data == 5:
         my_tts.TTSModuleSpeak("[h0][v10][m53]", "好的")
-        __target_color = ()
+        target_color = ()
 
     if not start_pick_up:
-        if __target_color != ():
-            detect_color = __target_color[0]
+        if target_color != ():
+            detect_color = target_color[0]
             frame_mask = cv2.inRange(frame_lab, color_range[detect_color][0], color_range[detect_color][1])  #对原图像和掩模进行位运算
             opened = cv2.morphologyEx(frame_mask, cv2.MORPH_OPEN, np.ones((6, 6), np.uint8))  # 开运算
             closed = cv2.morphologyEx(opened, cv2.MORPH_CLOSE, np.ones((6, 6), np.uint8))  # 闭运算

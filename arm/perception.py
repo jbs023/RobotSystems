@@ -92,7 +92,7 @@ class Perception():
         
         if not self.state.start_pick_up:
             for i in color_range:
-                if i in self.state.__target_color:
+                if i in self.state.target_color:
                     areaMaxContour, area_max = self.get_max_area(frame_lab, i)
                     if areaMaxContour is not None:
                         if area_max > max_area:  # 找最大面积
@@ -175,7 +175,7 @@ class Perception():
         areaMaxContour = 0
         if not self.state.start_pick_up:
             for i in color_range:
-                if i in self.state.__target_color:
+                if i in self.state.target_color:
                     self.state.detect_color = i
                     areaMaxContour, area_max = self.get_max_area(frame_lab, i)
                     

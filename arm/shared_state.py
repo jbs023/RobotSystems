@@ -35,8 +35,8 @@ class SharedState():
         self.move_square = False #TODO: Do we need this here?
         self.color_list = []
 
-        self.__target_color = (color,)
-        logging.debug("Set color: {}".format(self.__target_color))
+        self.target_color = (color,)
+        logging.debug("Set color: {}".format(self.target_color))
         self.servo1 = 500
         self.rect = None
         self.size = (640, 480)
