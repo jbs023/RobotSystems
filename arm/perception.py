@@ -106,7 +106,7 @@ class Perception():
                 
                 self.state.roi = getROI(box)
                 self.state.get_roi = True
-                self.state.update_world_coord()
+                self.update_world_coord()
 
                 if not self.state.start_pick_up:
                     img, distance = self.draw_box(box, img)
@@ -187,7 +187,7 @@ class Perception():
                 self.state.roi = getROI(box)
                 self.state.get_roi = True
 
-                self.state.update_world_coord()
+                self.update_world_coord()
                 self.state.track = True
 
                 img, distance = self.draw_box(box, img)
