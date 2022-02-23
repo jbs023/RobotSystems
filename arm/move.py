@@ -21,10 +21,10 @@ class Move():
         } 
 
     def setBuzzer(self,timer):
-        Board.self.setBuzzer(0)
-        Board.self.setBuzzer(1)
+        Board.setBuzzer(0)
+        Board.setBuzzer(1)
         time.sleep(timer)
-        Board.self.setBuzzer(0)
+        Board.setBuzzer(0)
 
     def set_rgb(self, color):
         if color == "red":
