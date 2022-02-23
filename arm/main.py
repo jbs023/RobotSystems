@@ -34,7 +34,7 @@ def main(config):
         move_func = move.sort_blocks
     elif config.function == "3":
         logging.debug("Stack Blocks")
-        move_func = move.palletize_blocks
+        move_func = move.stack_blocks
     elif config.function != "1":
         print("Invalid Function Choice!")
         exit()
